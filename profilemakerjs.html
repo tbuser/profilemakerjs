@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <title>ProfileMaker.js</title>
+    <script>
+      // original:
+      // function profile_maker($settings) {
+      //   $filR       = $settings->filD/2;
+      //   $filArea    = pow($filR, 2) * pi();
+      //   $oneRPM     = $settings->gearD * $settings->swell * pi();
+      //   $oneRPS     = $oneRPM / 60;
+      //   $woverh     = $settings->width/$settings->height;
+      //   $halfH      = $settings->height/2;
+      //   $area       = pow($halfH, 2) * pi();
+      //   
+      //   if ($settings->width > $settings->height) { 
+      //     $area = $area + ($settings->height * ($settings->width - $settings->height));
+      //   }
+      //   
+      //   $volPerS    = $area * $settings->feedrate;
+      //   $filNeeded  = $volPerS / $filArea;
+      //   $flowrate   = $filNeeded / $oneRPS;
+      // 
+      //   $solution;
+      //   $solution->woverh   = round($woverh,2);
+      //   $solution->flowrate = round($flowrate,4);
+      //   
+      //   return $solution;
+      // }
+      
+      function make_profile() {
+        var filD      = parseFloat(document.getElementById('filament_diameter').value);
+        var gearD     = parseFloat(document.getElementById('gear_diameter').value);
+        var swell     = parseFloat(document.getElementById('swell').value);
+        var width     = parseFloat(document.getElementById('width').value);
+        var height    = parseFloat(document.getElementById('height').value);
+        var feedrate  = parseFloat(document.getElementById('feed_rate').value);
+        
+        filR       = filD/2;
+        filArea    = Math.pow(filR, 2) * Math.PI;
+        oneRPM     = gearD * swell * Math.PI;
+        oneRPS     = oneRPM / 60;
+        woverh     = width/height;
+        halfH      = height/2;
+        area       = Math.pow(halfH, 2) * Math.PI;
+      
+        if (width > height) { 
+          area = area + (height * (width - height));
+        }
+      
+        volPerS   = area * feedrate;
+        filNeeded = volPerS / filArea;
+        flowrate  = filNeeded / oneRPS;
+    
+        document.getElementById('width_over_height').value = woverh.toFixed(2);
+        document.getElementById('flow_rate').value = flowrate.toFixed(4);
+
+        return true;
+      }      
+    </script>
+    
+    <style>
+      label {
+        width: 150px;
+        display: block;
+        float: left;
+      }
+    </style>
+  </head>
+  <body onload="make_profile();">
+
+    <h1>ProfileMaker.js</h1>
+
+    <form>
+      <p>
+        <label for="filament_diameter">Filament Diameter</label>
+        <input type="text" id="filament_diameter" size="8" value="1.75"><br/>
+  
+        <label for="gear_diameter">Pinch Wheel Diameter</label>
+        <input type="text" id="gear_diameter" size="8" value="10.58"><br/>
+    
+        <label for="swell">Packing Density</label>
+        <input type="text" id="swell" size="8" value="0.85"> (1 for PLA, 0.85 for ABS)<br/>
+    
+        <label for="width">Nozzle Width</label>
+        <input type="text" id="width" size="8" value="0.4"><br/>
+    
+        <label for="height">Layer Height</label>
+        <input type="text" id="height" size="8" value="0.3"><br/>
+    
+        <label for="feed_rate">Feed Rate</label>
+        <input type="text" id="feed_rate" size="8" value="30"><br/>
+      </p>
+      
+        <label>&nbsp;</label>
+        <input type="button" value="PROFILINATE!" onclick="make_profile();"><br/>
+  
+      <p>
+        <label for="width_over_height">Width/Height</label>
+        <input type="text" id="width_over_height" size="8" value="" disabled="disabled"><br/>
+    
+        <label for="flow_rate">Flowrate</label>
+        <input type="text" id="flow_rate" value="" size="8" disabled="disabled"><br/>
+      </p>
+    </form>
+    
+  </body>
+</html>
